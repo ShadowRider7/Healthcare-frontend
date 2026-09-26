@@ -1,16 +1,24 @@
 "use client";
-
+import { GoogleLogin } from "@react-oauth/google";
 import { useForm } from "@tanstack/react-form";
 import { Eye, EyeClosed } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useLogin } from "@/hooks";
+import { useGoogleOAuth, useLogin } from "@/hooks";
 import { loginSchema } from "@/validation";
+import GoogleLoginComponent from "../modules/google-login/GoogleLogin";
 import { Button } from "../ui/button";
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldSeparator,
+} from "../ui/field";
 import { Input } from "../ui/input";
-import { toast } from "../ui/toast";
 import { Spinner } from "../ui/spinner";
+import { toast } from "../ui/toast";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +47,6 @@ export default function LoginForm() {
             description: "Welcome back",
             type: "success",
           });
-
           router.push("/");
         },
         onError: (err) => {
@@ -132,7 +139,7 @@ export default function LoginForm() {
             }}
           </form.Field>
 
-       <Button disabled={loginPending} type="submit">
+          <Button disabled={loginPending} type="submit">
             {loginPending ? (
               <>
                 <Spinner /> submitting
@@ -143,6 +150,20 @@ export default function LoginForm() {
           </Button>
         </FieldGroup>
       </form>
+
+      <FieldSeparator>Or continue with</FieldSeparator>
+
+      <GoogleLoginComponent />
+
+      <div className="text-center text-sm text-muted-foreground">
+        Don&apos;t have an account?{" "}
+        <Link
+          href="/register"
+          className="font-medium underline underline-offset-4 hover:text-primary"
+        >
+          Register
+        </Link>
+      </div>
     </div>
   );
 }
